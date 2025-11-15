@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAÉ S1.04 - Mission 3 - Requêtes Personnalisées</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">KDou - SAÉ S1.04</a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="mission1.html">Mission 1</a></li>
+                <li><a href="mission2.html">Mission 2</a></li>
+                <li><a href="mission3.html" class="active">Mission 3</a></li>
+                <li><a href="conclusion.html">Conclusion</a></li>
+                <li><a href="apropos.html">À propos</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section class="fade-in">
+            <div class="page-header">
+                <h1>Mission 3 : Requêtes Personnalisées</h1>
+                <p>Indicateurs proposés par les membres de l'équipe</p>
+            </div>
+
+            <h2>II. Propositions d'indicateurs personnalisés</h2>
+
+            <!-- Requête Théophile -->
+            <h3>Requête de Théophile : Fournisseurs éloignés et impact carbone</h3>
+            
+            <div class="card">
+                <h4>Énoncé</h4>
+                <p>
+                    Identifier les fournisseurs avec lesquels KDou réalise le plus gros volume d'achats alors qu'ils sont situés loin, afin d'estimer l'impact logistique et envisager une relocalisation.
+                </p>
+
+                <h4>Intérêt</h4>
+                <p>
+                    Cette requête relie performance économique et respect de l'environnement. Elle identifie les fournisseurs à fort volume mais éloignés, ce qui peut représenter un coût environnemental élevé. KDou peut repenser sa stratégie d'approvisionnement pour réduire son empreinte carbone.
+                </p>
+            </div>
+
+            <div class="code-block">
+                <pre><code><span class="sql-keyword">SELECT</span> Fournisseur.NoFour, Fournisseur.Societe, Pays.PaysFR,
+    <span class="sql-function">SUM</span>(DetailCommande.Quantité * Produit.CoutAchat) <span class="sql-keyword">AS</span> TotalAchat
+<span class="sql-keyword">FROM</span> ((Fournisseur <span class="sql-keyword">INNER JOIN</span> Produit <span class="sql-keyword">ON</span> Fournisseur.NoFour = Produit.NoFour)
+    <span class="sql-keyword">INNER JOIN</span> DetailCommande <span class="sql-keyword">ON</span> Produit.RefProd = DetailCommande.[Réf produit])
+    <span class="sql-keyword">INNER JOIN</span> Pays <span class="sql-keyword">ON</span> Fournisseur.NoPays = Pays.NoPays
+<span class="sql-keyword">GROUP BY</span> Fournisseur.NoFour, Fournisseur.Societe, Pays.PaysFR;</code></pre>
+            </div>
+
+            <h4>Résultat (extrait)</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>N°</th>
+                        <th>Société</th>
+                        <th>Pays</th>
+                        <th>Total Achat</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>8</td>
+                        <td>Baker's Treats, Ltd.</td>
+                        <td>Royaume-Uni</td>
+                        <td>126 290,11 €</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>Coral Bay Delights Ltd.</td>
+                        <td>Australie</td>
+                        <td>64 903,98 €</td>
+                    </tr>
+                    <tr>
+                        <td>12</td>
+                        <td>TanteGreta Handelsgruppe AG</td>
+                        <td>Allemagne</td>
+                        <td>340 485,44 €</td>
+                    </tr>
+                    <tr>
+                        <td>24</td>
+                        <td>Boomerang Goods Pty Ltd.</td>
+                        <td>Australie</td>
+                        <td>284 920,52 €</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-box success">
+                <p>
+                    <strong>Recommandation :</strong> KDou devrait privilégier des fournisseurs européens pour réduire l'empreinte carbone, notamment pour remplacer les fournisseurs australiens et asiatiques à fort volume.
+                </p>
+            </div>
+
+            <!-- Requête Younesse -->
+            <h3>Requête de Younesse : Fournisseurs européens pour circuits courts</h3>
+            
+            <div class="card">
+                <h4>Énoncé</h4>
+                <p>
+                    Identifier les fournisseurs situés dans l'Union Européenne pour favoriser les circuits courts, réduire les distances de transport et limiter l'impact environnemental.
+                </p>
+
+                <h4>Intérêt</h4>
+                <p>
+                    Cette requête aide KDou à privilégier les fournisseurs européens. Réduire la distance transportée diminue les émissions de CO₂, optimise les coûts logistiques et renforce les partenariats régionaux.
+                </p>
+            </div>
+
+            <div class="code-block">
+                <pre><code><span class="sql-keyword">SELECT</span> Fournisseur.NoFour, Fournisseur.Societe, Fournisseur.Adresse,
+    Fournisseur.Ville, Pays.PaysFR, Pays.UE
+<span class="sql-keyword">FROM</span> Fournisseur <span class="sql-keyword">INNER JOIN</span> Pays <span class="sql-keyword">ON</span> Fournisseur.NoPays = Pays.NoPays
+<span class="sql-keyword">WHERE</span> Pays.UE = <span class="sql-string">"Membre"</span>;</code></pre>
+            </div>
+
+            <h4>Résultat (extrait)</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>N°</th>
+                        <th>Société</th>
+                        <th>Ville</th>
+                        <th>Pays</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>5</td>
+                        <td>Cooperativa de Aceites "Los Olivos"</td>
+                        <td>Oviedo</td>
+                        <td>Espagne</td>
+                    </tr>
+                    <tr>
+                        <td>11</td>
+                        <td>Nordlicht Feinkost GmbH</td>
+                        <td>Berlin</td>
+                        <td>Allemagne</td>
+                    </tr>
+                    <tr>
+                        <td>14</td>
+                        <td>Dolci e Sapori s.r.l.</td>
+                        <td>Ravenna</td>
+                        <td>Italie</td>
+                    </tr>
+                    <tr>
+                        <td>18</td>
+                        <td>Moines de Paris</td>
+                        <td>Paris</td>
+                        <td>France</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-box success">
+                <p>
+                    <strong>Recommandation :</strong> KDou dispose de 17 fournisseurs dans l'UE. Augmenter la part d'achats auprès de ces fournisseurs réduirait significativement l'empreinte carbone.
+                </p>
+            </div>
+
+            <!-- Requête Bilal -->
+            <h3>Requête de Bilal : Produits jamais vendus</h3>
+            
+            <div class="card">
+                <h4>Énoncé</h4>
+                <p>
+                    Identifier les produits du catalogue qui n'ont jamais été vendus pour repérer les références inutiles, éviter de stocker pour rien et améliorer l'offre.
+                </p>
+
+                <h4>Intérêt</h4>
+                <p>
+                    Cette requête met en évidence les produits qui mobilisent du stock sans apporter de chiffre d'affaires. Elle aide KDou à optimiser son offre, réduire les coûts logistiques et limiter le gaspillage.
+                </p>
+            </div>
+
+            <div class="code-block">
+                <pre><code><span class="sql-keyword">SELECT</span> Produit.RefProd, Produit.NomProd
+<span class="sql-keyword">FROM</span> Produit <span class="sql-keyword">LEFT JOIN</span> DetailCommande
+    <span class="sql-keyword">ON</span> Produit.RefProd = DetailCommande.[Réf produit]
+<span class="sql-keyword">WHERE</span> DetailCommande.[Réf produit] <span class="sql-keyword">IS NULL</span>;</code></pre>
+            </div>
+
+            <h4>Résultat (extrait)</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Réf</th>
+                        <th>Nom produit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>84</td>
+                        <td>Limonadystel</td>
+                    </tr>
+                    <tr>
+                        <td>86</td>
+                        <td>Sugar bleu blanc</td>
+                    </tr>
+                    <tr>
+                        <td>87</td>
+                        <td>Bratislava Vodka</td>
+                    </tr>
+                    <tr>
+                        <td>91</td>
+                        <td>linonade citronellanonella</td>
+                    </tr>
+                    <tr>
+                        <td>96</td>
+                        <td>Rhum martini Cubano</td>
+                    </tr>
+                    <tr>
+                        <td>150</td>
+                        <td>Paté de Campagne au Pommeau</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-box warning">
+                <p>
+                    <strong>Recommandation :</strong> Sur 33 produits jamais vendus, KDou devrait analyser pourquoi (prix, description), envisager leur retrait pour réduire les coûts de stockage, ou promouvoir certains produits intéressants.
+                </p>
+            </div>
+
+            <!-- Requête Malik -->
+            <h3>Requête de Malik : Produits à coût d'achat élevé</h3>
+            
+            <div class="card">
+                <h4>Énoncé</h4>
+                <p>
+                    Identifier les produits avec un coût d'achat élevé (> 50€), car ces articles nécessitent souvent davantage de ressources naturelles ou d'énergie lors de leur fabrication.
+                </p>
+
+                <h4>Intérêt</h4>
+                <p>
+                    Un coût d'achat élevé peut révéler un processus de production plus polluant. Cette requête aide KDou à identifier les produits potentiellement les plus énergivores et à orienter son catalogue vers des alternatives durables.
+                </p>
+            </div>
+
+            <div class="code-block">
+                <pre><code><span class="sql-keyword">SELECT</span> RefProd, NomProd, CoutAchat
+<span class="sql-keyword">FROM</span> Produit
+<span class="sql-keyword">WHERE</span> CoutAchat &gt; 50
+<span class="sql-keyword">ORDER BY</span> CoutAchat <span class="sql-keyword">DESC</span>;</code></pre>
+            </div>
+
+            <h4>Résultat (extrait)</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Réf</th>
+                        <th>Nom produit</th>
+                        <th>Coût Achat</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>29</td>
+                        <td>Thüringer Rostbratwurst</td>
+                        <td>103,16 €</td>
+                    </tr>
+                    <tr>
+                        <td>51</td>
+                        <td>Côte de Blaye</td>
+                        <td>100,00 €</td>
+                    </tr>
+                    <tr>
+                        <td>76</td>
+                        <td>Lakkalikööri</td>
+                        <td>88,83 €</td>
+                    </tr>
+                    <tr>
+                        <td>59</td>
+                        <td>Raclette Courdavault</td>
+                        <td>80,83 €</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>Mishi Kobe Niku</td>
+                        <td>80,83 €</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-box info">
+                <p>
+                    <strong>Recommandation :</strong> KDou devrait analyser l'origine et le processus de fabrication de ces produits premium pour évaluer leur impact environnemental et chercher des alternatives plus durables.
+                </p>
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="mission3.html" class="btn">← Requêtes obligatoires</a>
+                <a href="conclusion.html" class="btn btn-primary">Conclusion →</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2025-2026 - SAÉ S1.04 - BUT Informatique</p>
+            <p>IUT de Paris - Rives de Seine - Université Paris Cité</p>
+            <div class="footer-links">
+                <a href="index.html">Accueil</a>
+                <a href="mission1.html">Mission 1</a>
+                <a href="mission2.html">Mission 2</a>
+                <a href="mission3.html">Mission 3</a>
+                <a href="conclusion.html">Conclusion</a>
+                <a href="apropos.html">À propos</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

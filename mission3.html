@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAÉ S1.04 - Mission 3</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">KDou - SAÉ S1.04</a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="mission1.html">Mission 1</a></li>
+                <li><a href="mission2.html">Mission 2</a></li>
+                <li><a href="mission3.html" class="active">Mission 3</a></li>
+                <li><a href="conclusion.html">Conclusion</a></li>
+                <li><a href="apropos.html">À propos</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section class="fade-in">
+            <div class="page-header">
+                <h1>Mission 3 : Analyse des Données avec SQL</h1>
+                <p>Production d'indicateurs calculés avec le langage SQL</p>
+            </div>
+
+            <h2>Contexte</h2>
+            <p>
+                L'objectif de cette troisième mission est d'exploiter la nouvelle version de la base de données KDou pour produire des indicateurs calculés pertinents en utilisant le langage SQL.
+            </p>
+
+            <div class="info-box info">
+                <h3>Évolutions de la base de données</h3>
+                <ul>
+                    <li><strong>Partenariat client :</strong> Certains clients pilotent un réseau de partenaires pour optimiser les livraisons groupées</li>
+                    <li><strong>Table Pays :</strong> Gestion organisée des pays des fournisseurs avec indication d'appartenance à l'UE</li>
+                    <li><strong>Système de prix :</strong> Coût d'achat au fournisseur + coefficient de marge par catégorie = prix de vente</li>
+                </ul>
+            </div>
+
+            <h2>I. Les 4 requêtes obligatoires</h2>
+
+            <!-- Question 1 -->
+            <h3>Question 1 : Chiffre d'affaires desserts et boissons par année</h3>
+            
+            <div class="query-result">
+                <h4>Objectif</h4>
+                <p>
+                    KDou s'intéresse aux desserts et aux boissons dans sa réflexion en lien avec la santé. On veut le chiffre d'affaire généré par les catégories desserts ou boissons par année.
+                </p>
+            </div>
+
+            <div class="code-block">
+                <pre><code><span class="sql-keyword">SELECT</span> <span class="sql-function">DatePart</span>(<span class="sql-string">'yyyy'</span>, Commande.DateCde) <span class="sql-keyword">AS</span> Annee,
+    <span class="sql-function">SUM</span>(DetailCommande.[Quantité] * Produit.CoutAchat) <span class="sql-keyword">AS</span> ChiffreAffaires
+<span class="sql-keyword">FROM</span> Commande, DetailCommande, Produit, Categorie
+<span class="sql-keyword">WHERE</span> Commande.[N° commande] = DetailCommande.[N° commande]
+    <span class="sql-keyword">AND</span> Produit.RefProd = DetailCommande.[Réf produit]
+    <span class="sql-keyword">AND</span> Categorie.CodeCateg = Produit.CodeCateg
+    <span class="sql-keyword">AND</span> Categorie.NomCateg <span class="sql-keyword">IN</span> (<span class="sql-string">'Desserts'</span>,<span class="sql-string">'Boissons'</span>)
+<span class="sql-keyword">GROUP BY</span> <span class="sql-function">DatePart</span>(<span class="sql-string">'yyyy'</span>, Commande.DateCde)
+<span class="sql-keyword">ORDER BY</span> <span class="sql-function">DatePart</span>(<span class="sql-string">'yyyy'</span>, Commande.DateCde);</code></pre>
+            </div>
+
+            <h4>Résultat</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Année</th>
+                        <th>Chiffre d'Affaires</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2020</td>
+                        <td>84 872,10 €</td>
+                    </tr>
+                    <tr>
+                        <td>2021</td>
+                        <td>714 089,65 €</td>
+                    </tr>
+                    <tr>
+                        <td>2022</td>
+                        <td>875,00 €</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-box warning">
+                <h4>Analyse</h4>
+                <ul>
+                    <li><strong>Forte croissance</strong> du CA desserts/boissons entre 2020 et 2021 (+741%)</li>
+                    <li>Chute en 2022 probablement due à des données incomplètes</li>
+                    <li>Ces catégories représentent un segment important de l'activité</li>
+                </ul>
+            </div>
+
+            <!-- Question 2 -->
+            <h3>Question 2 : Produits carnés non commandés</h3>
+            
+            <div class="query-result">
+                <h4>Objectif</h4>
+                <p>
+                    KDou se demande ce qu'il faut changer dans son offre. Combien de produits carnés n'ont jamais été commandés ?
+                </p>
+            </div>
+
+            <div class="code-block">
+                <pre><code><span class="sql-keyword">SELECT COUNT</span>(*) <span class="sql-keyword">AS</span> ProduitsViandesNonCommandes
+<span class="sql-keyword">FROM</span> Produit, Categorie
+<span class="sql-keyword">WHERE</span> Produit.CodeCateg = Categorie.CodeCateg
+    <span class="sql-keyword">AND</span> Categorie.NomCateg = <span class="sql-string">'Viandes'</span>
+    <span class="sql-keyword">AND</span> Produit.RefProd <span class="sql-keyword">NOT IN</span> 
+        (<span class="sql-keyword">SELECT</span> DetailCommande.[Réf produit] <span class="sql-keyword">FROM</span> DetailCommande);</code></pre>
+            </div>
+
+            <h4>Résultat</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ProduitsViandesNonCommandes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-box success">
+                <h4>Analyse</h4>
+                <ul>
+                    <li>2 produits de viande n'ont jamais été commandés</li>
+                    <li>Opportunité d'optimisation du catalogue</li>
+                    <li><strong>Impact positif</strong> sur la gestion des stocks et réduction du gaspillage</li>
+                </ul>
+            </div>
+
+            <!-- Question 3 -->
+            <h3>Question 3 : CA généré avec les fournisseurs hors UE</h3>
+            
+            <div class="query-result">
+                <h4>Objectif</h4>
+                <p>
+                    KDou étudie les provenances de ses produits. Quel CA total a été généré avec les fournisseurs hors UE ?
+                </p>
+            </div>
+
+            <div class="code-block">
+                <pre><code><span class="sql-keyword">SELECT</span> <span class="sql-function">SUM</span>(DetailCommande.Quantité * Produit.CoutAchat) <span class="sql-keyword">AS</span> CA_Hors_UE
+<span class="sql-keyword">FROM</span> ((Produit <span class="sql-keyword">INNER JOIN</span> DetailCommande 
+        <span class="sql-keyword">ON</span> Produit.RefProd = DetailCommande.[Réf produit])
+    <span class="sql-keyword">INNER JOIN</span> Fournisseur <span class="sql-keyword">ON</span> Produit.NoFour = Fournisseur.NoFour)
+    <span class="sql-keyword">INNER JOIN</span> Pays <span class="sql-keyword">ON</span> Fournisseur.NoPays = Pays.NoPays
+<span class="sql-keyword">WHERE</span> Pays.UE = <span class="sql-string">"Hors"</span>;</code></pre>
+            </div>
+
+            <h4>Résultat</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>CA_Hors_UE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1 190 790,92 €</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-box danger">
+                <h4>Analyse</h4>
+                <ul>
+                    <li>Plus de <strong>1,19 million d'euros</strong> de CA provient de fournisseurs hors UE</li>
+                    <li>Information cruciale pour l'analyse de l'empreinte carbone</li>
+                    <li>Opportunité de développer des partenariats européens</li>
+                </ul>
+            </div>
+
+            <!-- Question 4 -->
+            <h3>Question 4 : Clients pilotes avec autant de commandes que leurs partenaires</h3>
+            
+            <div class="query-result">
+                <h4>Objectif</h4>
+                <p>
+                    Y a-t-il des clients pilotes ayant autant (ou moins) de commandes que leurs clients partenaires ?
+                </p>
+            </div>
+
+            <div class="code-block">
+                <pre><code><span class="sql-keyword">SELECT</span> Pilote.CodeCli <span class="sql-keyword">AS</span> CodeClientPilote, Pilote.Societe <span class="sql-keyword">AS</span> SocietePilote, 
+    <span class="sql-function">COUNT</span>(CmdPilote.[N° commande]) <span class="sql-keyword">AS</span> NbCommandesPilote, 
+    <span class="sql-function">COUNT</span>(CmdPartenaire.[N° commande]) <span class="sql-keyword">AS</span> NbCommandesPartenaires
+<span class="sql-keyword">FROM</span> ((Clientele <span class="sql-keyword">AS</span> Pilote <span class="sql-keyword">LEFT JOIN</span> Clientele <span class="sql-keyword">AS</span> Partenaire 
+        <span class="sql-keyword">ON</span> Pilote.CodeCli = Partenaire.CodeCliPart)
+    <span class="sql-keyword">LEFT JOIN</span> Commande <span class="sql-keyword">AS</span> CmdPilote <span class="sql-keyword">ON</span> Pilote.CodeCli = CmdPilote.CodeCli)
+    <span class="sql-keyword">LEFT JOIN</span> Commande <span class="sql-keyword">AS</span> CmdPartenaire <span class="sql-keyword">ON</span> Partenaire.CodeCli = CmdPartenaire.CodeCli
+<span class="sql-keyword">WHERE</span> Partenaire.CodeCli <span class="sql-keyword">IS NOT NULL</span>
+<span class="sql-keyword">GROUP BY</span> Pilote.CodeCli, Pilote.Societe
+<span class="sql-keyword">HAVING</span> <span class="sql-function">COUNT</span>(CmdPilote.[N° commande]) &lt;= <span class="sql-function">COUNT</span>(CmdPartenaire.[N° commande]);</code></pre>
+            </div>
+
+            <h4>Résultat</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Société Pilote</th>
+                        <th>Nb Cmd Pilote</th>
+                        <th>Nb Cmd Partenaires</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>ALYAD</td>
+                        <td>Chez Bouxou</td>
+                        <td>3150</td>
+                        <td>3150</td>
+                    </tr>
+                    <tr>
+                        <td>DRACD</td>
+                        <td>Table nantaise</td>
+                        <td>748</td>
+                        <td>748</td>
+                    </tr>
+                    <tr>
+                        <td>GALED</td>
+                        <td>Crêperie de la gare</td>
+                        <td>1376</td>
+                        <td>1376</td>
+                    </tr>
+                    <tr>
+                        <td>GODOS</td>
+                        <td>Bistro gare</td>
+                        <td>820</td>
+                        <td>820</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-box warning">
+                <h4>Analyse</h4>
+                <ul>
+                    <li>4 clients pilotes ont <strong>exactement le même nombre</strong> de commandes que leurs partenaires</li>
+                    <li>Suggère une anomalie ou un système de mutualisation complet</li>
+                    <li>Le système de partenariat nécessite une vérification</li>
+                </ul>
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="mission3-requetes.html" class="btn btn-primary">Voir les requêtes personnalisées →</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2025-2026 - SAÉ S1.04 - BUT Informatique</p>
+            <p>IUT de Paris - Rives de Seine - Université Paris Cité</p>
+            <div class="footer-links">
+                <a href="index.html">Accueil</a>
+                <a href="mission1.html">Mission 1</a>
+                <a href="mission2.html">Mission 2</a>
+                <a href="mission3.html">Mission 3</a>
+                <a href="conclusion.html">Conclusion</a>
+                <a href="apropos.html">À propos</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

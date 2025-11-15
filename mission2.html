@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAÉ S1.04 - Mission 2</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">KDou - SAÉ S1.04</a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="mission1.html">Mission 1</a></li>
+                <li><a href="mission2.html" class="active">Mission 2</a></li>
+                <li><a href="mission3.html">Mission 3</a></li>
+                <li><a href="conclusion.html">Conclusion</a></li>
+                <li><a href="apropos.html">À propos</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section class="fade-in">
+            <div class="page-header">
+                <h1>Mission 2 : Exploitation avec Interface Low Code</h1>
+                <p>Utilisation d'Access QBE pour interroger la base de données</p>
+            </div>
+
+            <h2>Contexte</h2>
+            <p>
+                La mission 2 visait à exploiter la base de données KDou à travers une interface low code (Access QBE - Query By Example) pour créer des requêtes d'analyse sans programmation SQL directe.
+            </p>
+
+            <h2>Indicateur intéressant : Fournisseurs de viande et poisson</h2>
+
+            <div class="info-box info">
+                <h3>Énoncé</h3>
+                <p>
+                    Identifier les fournisseurs qui proposent des produits dans les catégories "Viandes" ou "Poissons et fruits de mer" pour analyser les partenariats stratégiques de KDou dans ces segments clés.
+                </p>
+            </div>
+
+            <h3>Interprétation</h3>
+            <p>
+                Cette requête permet de visualiser les fournisseurs spécialisés dans les protéines animales, un segment essentiel du catalogue KDou. Elle aide à évaluer la diversité des sources d'approvisionnement.
+            </p>
+
+            <h3>Résultat</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Société</th>
+                        <th>Pays</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Sakura Imports</td>
+                        <td>Japon</td>
+                    </tr>
+                    <tr>
+                        <td>Le Panier du Coin</td>
+                        <td>Canada</td>
+                    </tr>
+                    <tr>
+                        <td>TanteGreta Handelsgruppe AG</td>
+                        <td>Allemagne</td>
+                    </tr>
+                    <tr>
+                        <td>Atlantic Bay Fish Co.</td>
+                        <td>États-Unis</td>
+                    </tr>
+                    <tr>
+                        <td>Bayou pice Traders</td>
+                        <td>États-Unis</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Code SQL équivalent</h3>
+            <div class="code-block">
+                <pre><code><span class="sql-keyword">SELECT DISTINCT</span> Fournisseur.Societe, Fournisseur.Pays
+<span class="sql-keyword">FROM</span> Categorie <span class="sql-keyword">INNER JOIN</span> (Fournisseur <span class="sql-keyword">INNER JOIN</span> Produit 
+    <span class="sql-keyword">ON</span> Fournisseur.NoFour = Produit.NoFour)
+<span class="sql-keyword">ON</span> Categorie.CodeCateg = Produit.CodeCateg 
+<span class="sql-keyword">WHERE</span> Categorie.NomCateg = <span class="sql-string">"Viandes"</span> <span class="sql-keyword">OR</span> Categorie.NomCateg = <span class="sql-string">"Poissons"</span>
+<span class="sql-keyword">ORDER BY</span> Fournisseur.Societe;</code></pre>
+            </div>
+
+            <div class="info-box success">
+                <h3>Analyse</h3>
+                <p>
+                    On observe une <strong>diversité géographique</strong> des fournisseurs (Asie, Amérique du Nord, Europe), ce qui permet à KDou de ne pas dépendre d'une seule région pour ces produits critiques.
+                </p>
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="mission1.html" class="btn">← Mission 1</a>
+                <a href="mission3.html" class="btn btn-primary">Mission 3 →</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2025-2026 - SAÉ S1.04 - BUT Informatique</p>
+            <p>IUT de Paris - Rives de Seine - Université Paris Cité</p>
+            <div class="footer-links">
+                <a href="index.html">Accueil</a>
+                <a href="mission1.html">Mission 1</a>
+                <a href="mission2.html">Mission 2</a>
+                <a href="mission3.html">Mission 3</a>
+                <a href="conclusion.html">Conclusion</a>
+                <a href="apropos.html">À propos</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

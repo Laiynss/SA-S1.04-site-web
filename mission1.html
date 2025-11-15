@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAÉ S1.04 - Mission 1</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">KDou - SAÉ S1.04</a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="mission1.html" class="active">Mission 1</a></li>
+                <li><a href="mission2.html">Mission 2</a></li>
+                <li><a href="mission3.html">Mission 3</a></li>
+                <li><a href="conclusion.html">Conclusion</a></li>
+                <li><a href="apropos.html">À propos</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section class="fade-in">
+            <div class="page-header">
+                <h1>Mission 1 : Étude des Données</h1>
+                <p>Analyse de la structure initiale de la base de données KDou</p>
+            </div>
+
+            <h2>Contexte</h2>
+            <p>
+                La première mission consistait à analyser la structure initiale de la base de données KDou et à comprendre l'organisation des données relatives aux clients, fournisseurs, produits et commandes.
+            </p>
+
+            <h2>Bilan structuré sur l'étude des données</h2>
+
+            <h3>1. Structure de la base de données</h3>
+            <p>La base de données KDou est organisée autour de plusieurs tables principales :</p>
+
+            <div class="card-container">
+                <div class="card">
+                    <h3>Clientele</h3>
+                    <p>Informations sur les clients : code, société, contact, adresse, ville, téléphone, mail</p>
+                </div>
+                <div class="card">
+                    <h3>Fournisseur</h3>
+                    <p>Données des fournisseurs : numéro, société, contact, fonction, adresse, pays</p>
+                </div>
+                <div class="card">
+                    <h3>Produit</h3>
+                    <p>Catalogue de produits : référence, nom, catégorie, fournisseur, coût d'achat, stock</p>
+                </div>
+                <div class="card">
+                    <h3>Categorie</h3>
+                    <p>Classification des produits : code, nom, description, coefficient de marge</p>
+                </div>
+                <div class="card">
+                    <h3>Commande</h3>
+                    <p>Enregistrement des commandes clients : numéro, date, client, port</p>
+                </div>
+                <div class="card">
+                    <h3>DetailCommande</h3>
+                    <p>Lignes de commande avec les quantités et remises</p>
+                </div>
+            </div>
+
+            <h3>2. Exemples d'analyse</h3>
+            <ul>
+                <li>Identification des clients parisiens (ChefFamilla, Chez Pierre, ChopsTang, etc.)</li>
+                <li>Analyse des fournisseurs par pays d'origine</li>
+                <li>Étude de la répartition des produits par catégorie</li>
+                <li>Examen des relations client-fournisseur via les commandes</li>
+            </ul>
+
+            <h3>3. Observations principales</h3>
+            <div class="info-box warning">
+                <ul>
+                    <li>Forte représentation de fournisseurs européens et nord-américains</li>
+                    <li>Diversité du catalogue avec 8 catégories principales</li>
+                    <li>Système de remise variable selon les clients et produits</li>
+                    <li>Présence de quelques fournisseurs sans produits au catalogue</li>
+                </ul>
+            </div>
+
+            <h2>Perspectives d'amélioration</h2>
+            <ul class="styled-list">
+                <li>Nécessité d'ajouter une table Pays pour normaliser les données géographiques</li>
+                <li>Opportunité de créer un système de partenariat entre clients</li>
+                <li>Besoin de calculer automatiquement les prix de vente à partir des coûts d'achat</li>
+            </ul>
+
+            <h2>Conclusion Mission 1</h2>
+            <p>
+                Cette première analyse a permis de comprendre la structure de base et d'identifier les axes d'amélioration qui seront mis en œuvre dans les missions suivantes.
+            </p>
+
+            <div class="text-center mt-4">
+                <a href="mission2.html" class="btn btn-primary">Mission 2 →</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2025-2026 - SAÉ S1.04 - BUT Informatique</p>
+            <p>IUT de Paris - Rives de Seine - Université Paris Cité</p>
+            <div class="footer-links">
+                <a href="index.html">Accueil</a>
+                <a href="mission1.html">Mission 1</a>
+                <a href="mission2.html">Mission 2</a>
+                <a href="mission3.html">Mission 3</a>
+                <a href="conclusion.html">Conclusion</a>
+                <a href="apropos.html">À propos</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
